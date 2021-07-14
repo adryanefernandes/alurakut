@@ -7,7 +7,6 @@ import ProfileRelationsBox from '../src/components/ProfileRelationsBox'
 
 import { MainGrid } from '../src/styles/MainGrid'
 import { Box } from '../src/styles/Box'
-import { ProfileRelationsBoxWrapper } from '../src/styles/ProfileRelations'
 import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
 
 
@@ -19,11 +18,6 @@ export default function Home() {
   const followers = useRequestData([], `/users/${githubUser}/followers`)
   const following = useRequestData([], `/users/${githubUser}/following?per_page=6`)
 
-  const followersData = {
-    id: followers.id,
-    title: followers.login,
-    image: `https://github.com/${followers.login}.png`
-  }
   //Form
   const [communities, setCommunities] = useState([{
     id: '1',
