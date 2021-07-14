@@ -1,5 +1,5 @@
-import { Box } from '../../styles/Box'
-import { AlurakutProfileSidebarMenuDefault } from '../../lib/AlurakutCommons'
+import { Box } from '../styles/Box'
+import { AlurakutProfileSidebarMenuDefault } from '../lib/AlurakutCommons'
 
 
 function ProfileSideBar(props) {
