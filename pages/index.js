@@ -1,19 +1,15 @@
 import { useState } from 'react'
 import useForm from '../src/hooks/useForm'
+import useRequestData from '../src/hooks/useRequestData'
+import ProfileSideBar from '../src/components/ProfileSideBar'
+import WelcomeAreaForm from '../src/components/WelcomeAreaForm'
+import ProfileRelationsBox from '../src/components/ProfileRelationsBox'
 
 import { MainGrid } from '../src/styles/MainGrid'
 import { Box } from '../src/styles/Box'
 import { ProfileRelationsBoxWrapper } from '../src/styles/ProfileRelations'
 import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
-import useRequestData from '../src/hooks/useRequestData'
-import ProfileSideBar from '../src/components/ProfileSideBar'
-import WelcomeAreaForm from '../src/components/WelcomeAreaForm'
 
-// function ProfileRelationsBox(props) {
-//   return (
-
-//   )
-// }
 
 export default function Home() {
   const githubUser = 'adryanefernandes'
@@ -23,7 +19,11 @@ export default function Home() {
   const followers = useRequestData([], `/users/${githubUser}/followers`)
   const following = useRequestData([], `/users/${githubUser}/following?per_page=6`)
 
-
+  const followersData = {
+    id: followers.id,
+    title: followers.login,
+    image: `https://github.com/${followers.login}.png`
+  }
   //Form
   const [communities, setCommunities] = useState([{
     id: '1',
@@ -77,65 +77,23 @@ export default function Home() {
 
 
         <div className="profileRelationsArea" style={{ gridArea: "profileRelationsArea" }}>
-          <ProfileRelationsBoxWrapper >
-            <h2 className={"smallTitle"}>
-              Seguidores ({userData && userData.followers})
-            </h2>
+          <ProfileRelationsBox
+            title={"Seguidores"}
+            list={followers}
+            categoryQuantity={userData.followers}
+          />
 
+          <ProfileRelationsBox
+            title={"Comunidades"}
+            list={communities}
+            categoryQuantity={communities.length}
+          />
 
-            <ul>
-              {followers && followers.map((follower) => {
-                return (
-                  <li key={follower.id}>
-                    <a href={`https://github.com/${follower.login}`} >
-                      <img src={`https://github.com/${follower.login}.png`} />
-                      <span>{follower.login}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-
-          <ProfileRelationsBoxWrapper >
-            <h2 className={"smallTitle"}>
-              Comunidades ({communities.length})
-            </h2>
-
-
-            <ul>
-              {communities.map((community) => {
-                return (
-                  <li key={community.id}>
-                    <a href={`/users/${community.title}`} >
-                      <img src={community.image} />
-                      <span>{community.title}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-          <ProfileRelationsBoxWrapper >
-            <h2 className={"smallTitle"}>
-              Pessoas da comunidade ({userData && userData.following})
-            </h2>
-
-
-            <ul>
-              {following && following.map((followed) => {
-                return (
-                  <li key={followed.id}>
-                    <a href={`https://github.com/${followed.login}`} >
-                      <img src={`https://github.com/${followed.login}.png`} />
-                      <span>{followed.login}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-
-          </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox
+            title={"Pessoas da comunidade"}
+            list={following}
+            categoryQuantity={userData.following}
+          />
         </div>
       </MainGrid >
     </>
