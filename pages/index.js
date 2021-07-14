@@ -1,4 +1,6 @@
-import React from 'react'
+import { useState } from 'react'
+import useForm from '../src/hooks/useForm'
+
 import { MainGrid } from '../src/styles/MainGrid'
 import { Box } from '../src/styles/Box'
 import { ProfileRelationsBoxWrapper } from '../src/styles/ProfileRelations'
@@ -23,9 +25,9 @@ export default function Home() {
 
 
   //Form
-  const [community, setCommunity] = useState([{
+  const [communities, setCommunities] = useState([{
     id: '1',
-    titulo: 'Eu odeio acordar cedo',
+    title: 'Eu odeio acordar cedo',
     image: 'https://th.bing.com/th/id/OIP.MloV5FpEwDPQ7J_bTG6x1AHaFD?pid=ImgDet&rs=1'
   }])
 
@@ -34,19 +36,19 @@ export default function Home() {
     title: "",
     image: ""
   }
-  const [form, handleForm, resetForm] = useForm(initialState)
+  const [form, handleInput, resetForm] = useForm(initialState)
 
   function handleCreateCommunity(e) {
     e.preventDefault();
-    // const formData = new FormData(e.target)
 
-    // const novaComunidade = {
-    //   id: new Date().toISOString(),
-    //   titulo: dadosDoForm.get('title'),
-    //   image: dadosDoForm.get("image")
-    // }
+    const newCommunity = {
+      id: new Date().toISOString(),
+      title: form.title,
+      image: form.image
+    }
 
-    setComunidades([...comunidades, form])
+    setCommunities([...communities, newCommunity])
+    resetForm()
   }
 
 
@@ -54,60 +56,27 @@ export default function Home() {
     <>
       <AlurakutMenu />
       <MainGrid>
-
         <div className="profileArea" style={{ gridArea: "profileArea" }}>
           <ProfileSideBar githubUser={githubUser} />
         </div>
 
+
         <div className="welcomeArea" style={{ gridArea: "welcomeArea" }}>
-            
-           <Box>
+          <Box>
             <h1 className="title">
               Bem-vindo(a)
             </h1>
             <OrkutNostalgicIconSet />
           </Box>
-
-          <Box>
-            <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCriaComunidade(e) {
-              e.preventDefault();
-              const dadosDoForm = new FormData(e.target)
-
-              const novaComunidade = {
-                id: new Date().toISOString(),
-                titulo: dadosDoForm.get('title'),
-                image: dadosDoForm.get("image")
-              }
-
-              setComunidades([...comunidades, novaComunidade])
-            }}>
-              <div>
-                <input
-                  placeholder="Qual vai ser o nome da sua comunidade?"
-                  name="title"
-                  arial-label="Qual vai ser o nome da sua comunidade?"
-                  type="text"
-                />
-              </div>
-              <div>
-                <input
-                  placeholder="Coloque uma URl para colocarmos de capa"
-                  name="image"
-                  arial-label="Coloque uma URl para colocarmos de capa"
-                  type="text"
-                />
-              </div>
-
-              <button type="submit">
-                Criar comunidade
-              </button>
-            </form>
-          </Box> 
+          <WelcomeAreaForm
+            form={form}
+            handleInput={handleInput}
+            handleForm={handleCreateCommunity}
+          />
         </div>
 
-        <div className="profileRelationsArea" style={{ gridArea: "profileRelationsArea" }}>
 
+        <div className="profileRelationsArea" style={{ gridArea: "profileRelationsArea" }}>
           <ProfileRelationsBoxWrapper >
             <h2 className={"smallTitle"}>
               Seguidores ({userData && userData.followers})
@@ -130,17 +99,17 @@ export default function Home() {
 
           <ProfileRelationsBoxWrapper >
             <h2 className={"smallTitle"}>
-              Comunidades ({comunidades.length})
+              Comunidades ({communities.length})
             </h2>
 
 
             <ul>
-              {comunidades.map((comunidade) => {
+              {communities.map((community) => {
                 return (
-                  <li key={comunidade.id}>
-                    <a href={`/users/${comunidade.title}`} >
-                      <img src={comunidade.image} />
-                      <span>{comunidade.titulo}</span>
+                  <li key={community.id}>
+                    <a href={`/users/${community.title}`} >
+                      <img src={community.image} />
+                      <span>{community.title}</span>
                     </a>
                   </li>
                 )
