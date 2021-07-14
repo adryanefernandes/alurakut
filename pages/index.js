@@ -3,6 +3,7 @@ import { MainGrid } from '../src/components/MainGrid'
 import { Box } from '../src/components/Box'
 import { AlurakutMenu, OrkutNostalgicIconSet, AlurakutProfileSidebarMenuDefault } from '../src/lib/AlurakutCommons'
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
+import axios from 'axios'
 
 function ProfileSideBar(props) {
   return (
@@ -20,15 +21,32 @@ function ProfileSideBar(props) {
   )
 }
 
+// function ProfileRelationsBox(props) {
+//   return (
+
+//   )
+// }
+
 export default function Home() {
   const [comunidades, setComunidades] = React.useState([{
     id: '1',
     titulo: 'Eu odeio acordar cedo',
     image: 'https://th.bing.com/th/id/OIP.MloV5FpEwDPQ7J_bTG6x1AHaFD?pid=ImgDet&rs=1'
   }])
+  const [seguidores, setSeguidores] = React.useState([])
 
   const githubUser = 'adryanefernandes'
   const pessoasFavoritas = ["rafaballerini", "marcobrunodev", "juunegreiros", "omariosouto", 'peas', 'felipefialho']
+
+
+  React.useEffect(() => {
+    axios.get("https://api.github.com/users/peas/followers")
+      .then((res) => {
+        setSeguidores(res.data)
+      }).catch((error) => {
+        alert(error)
+      })
+  }, [])
 
   return (
     <>
@@ -85,6 +103,27 @@ export default function Home() {
         </div>
 
         <div className="profileRelationsArea" style={{ gridArea: "profileRelationsArea" }}>
+
+          <ProfileRelationsBoxWrapper >
+            <h2 className={"smallTitle"}>
+              Seguidores ({seguidores.length})
+            </h2>
+
+
+            <ul>
+              {seguidores && seguidores.map((seguidor) => {
+                return (
+                  <li key={seguidor.id}>
+                    <a href={`https://github.com/${seguidor.login}`} >
+                      <img src={`https://github.com/${seguidor.login}.png`} />
+                      <span>{seguidor.login}</span>
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </ProfileRelationsBoxWrapper>
+
           <ProfileRelationsBoxWrapper >
             <h2 className={"smallTitle"}>
               Comunidades ({comunidades.length})
